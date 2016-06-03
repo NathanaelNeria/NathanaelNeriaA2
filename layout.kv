@@ -1,0 +1,44 @@
+BoxLayout:
+    orientation:'vertical'
+
+    BoxLayout:
+        orientation:'horizontal'
+
+        BoxLayout:
+            orientation:'vertical'
+            size_hint_x:0.3
+
+            Button:
+                id:listitem
+                text:'List Items'
+                on_press:app.itemlist()
+
+            Button:
+                id:hireitem
+                text:'Hire Items'
+                on_press:app.itemhire()
+
+            Button:
+                id:returnitem
+                text:'Return Items'
+                on_press:app.itemreturn()
+
+            Button:
+                id:confirm
+                text:'Confirm'
+                on_press:app.confirm()
+            Button:
+                id:additem
+                text:'Add New Item'
+                on_press:app.additem()
+
+        GridLayout:
+            id: itemsBox
+            rows: 3
+            orientation: 'vertical'
+
+    Label:
+        id:label
+        text:'Choose action from the left menu, then select items on the right'
+        size_hint_y:0.1
+        height: 30
