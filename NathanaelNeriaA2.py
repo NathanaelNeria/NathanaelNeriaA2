@@ -1,3 +1,9 @@
+"""
+Student ID: 13251882
+Name : Nathanael Neria
+Repository link: https://github.com/NathanaelNeria/NathanaelNeriaA2.git
+Date submitted : 3/6/2016
+"""
 from kivy.app import App
 from kivy.properties import StringProperty
 from kivy.lang import Builder
@@ -11,6 +17,8 @@ class Main(App):
 
     def __init__(self, **kwargs):
 
+        """Initializer to construct the app"""
+
         super(Main, self).__init__(**kwargs)
         self.item_list = ItemList()
         storageitem = open("inventory.csv", "r+")
@@ -23,6 +31,9 @@ class Main(App):
         return self.root
 
     def itemlist(self):
+
+        """Function to show all the list item in the inventory.csv"""
+
         self.root.ids.itemsBox.clear_widgets()
         self.root.ids.label.text = 'Choose action from the left menu, then select items on the right'
         self.root.ids.listitem.background_color = (1, 1, 0.5, 1)
@@ -43,6 +54,9 @@ class Main(App):
 
 
     def itemhire(self):
+
+        """Function to hire the items from inventory.csv, red color item mean the item is out"""
+
         self.root.ids.itemsBox.clear_widgets()
         self.root.ids.label.text = 'Choose action from the left menu, then select items on the right'
         self.root.ids.listitem.background_color = (1, 1, 1, 1)
@@ -60,6 +74,9 @@ class Main(App):
             self.root.ids.itemsBox.add_widget(temp_button)
 
     def itemreturn(self):
+
+        """Function to return the items that is out from the inventory.csv"""
+
         self.root.ids.itemsBox.clear_widgets()
         self.root.ids.label.text = 'Choose action from the left menu, then select items on the right'
         self.root.ids.listitem.background_color = (1, 1, 1, 1)
@@ -78,10 +95,13 @@ class Main(App):
 
 
     def pressitem(self, instance):
+
+        """Function will show the description of the selected item the label
+        will also change when the item_return or item_hire button is being selected"""
+
         for line in self.item_list:
             name, item_desc, cost, status = line.split(",")
             if instance.text == name:
-                print(name)
                 if self.root.ids.listitem.background_color == [1, 1, 0.5, 1]:
                     self.root.ids.label.text = "{} ({}), ${:,.2f} is {}".format(name, item_desc, float(cost), status)
                 elif self.root.ids.hireitem.background_color == [1, 1, 0.5, 1]:
@@ -96,6 +116,9 @@ class Main(App):
                         self.root.ids.label.text = "Returning: no items"
 
     def confirm(self):
+
+        """Function to make changes on the inventory.csv file"""
+
         item_count = 0
         with open("inventory.csv") as file:
             readitem = file.readlines()
@@ -119,10 +142,13 @@ class Main(App):
                     for line in readitem:
                         self.item_list.store(line)
                     file.close()
-            item_count += 1
+            item_count += 1 # add up everytime something is written
         self.itemlist()
 
     def additem(self):
+
+        """Function to display the popup window"""
+
         self.root.ids.listitem.background_color = (1, 1, 1, 1)
         self.root.ids.hireitem.background_color = (1, 1, 1, 1)
         self.root.ids.returnitem.background_color = (1, 1, 1, 1)
@@ -133,28 +159,51 @@ class Main(App):
         self.popup.open()
 
     def press_save(self, name, item_desc, cost, instruction):
-        def check(cost):
-            try:
-                float(cost)
-                return True
-            except ValueError:
-                return False
 
-        if len(name.strip()) == 0 or len(item_desc.strip()) == 0 or len(cost.strip()) == 0:
-            instruction = "All fields must be completed"
-        elif check(cost) == False:
-            instruction = "Price must be valid number"
-        elif check(cost) == True and float(cost) < 0:
-            instruction = "Price cannot be negative"
-        else:
-            additem = "\n{},{},{},in".format(name, item_desc, float(cost))
-            with open("inventory.csv", "a") as file:
-                file.writelines(additem)
-            self.item_list.store(additem)
-            self.cancel()
-            self.itemlist()
+        """Function to save the input item to inventory.csv and dismiss the pop up window after saving"""
+
+        error_mode = 0
+        try: # error checking
+            finalPrice = float(cost)
+            if name == "":
+                error_mode = 1
+                error = "Error"
+                check = float(error)
+                print(check)
+            elif item_desc == "":
+                error_mode = 1
+                error = "Error"
+                check = float(error)
+                print(check)
+            elif finalPrice < 0:
+                error_mode = 2
+                error = "Error"
+                check = float(error)
+                print(check)
+            else:
+                newItem = "\n{},{},{},{}".format(name, item_desc, cost, "in")
+                print(newItem)
+                with open("inventory.csv", "a") as file:
+                    file.writelines(newItem)
+                self.item_list.store(newItem)
+                self.cancel()
+                self.status_text = "Choose action from the left menu, then select items on the right"
+                self.itemlist()
+        except ValueError:
+            if error_mode == 0:
+                if name == "" or item_desc == "" or cost == "":
+                    instruction.text = "All fields must be completed"
+                else:
+                    instruction.text = "Please enter a valid number" # will appear if the finalprice is not a number
+            elif error_mode == 1:
+                instruction.text = "All fields must be completed" # will appear if one of the text input is blank
+            elif error_mode == 2:
+                instruction.text = "Price must not be negative" # will appear if the number is negative
 
     def cancel(self):
+
+        """Function to dismiss pop up window"""
+
         self.popup.dismiss()
 
 Main().run()
