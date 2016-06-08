@@ -12,7 +12,7 @@ from itemlist import ItemList
 
 class MainApp(App):
 
-    stringproperty = StringProperty()
+    string_property = StringProperty()
 
     def __init__(self, **kwargs):
 
@@ -151,19 +151,19 @@ class MainApp(App):
         self.root.ids.returnitem.background_color = (1, 1, 1, 1)
         self.root.ids.confirm.background_color = (1, 1, 1, 1)
         self.root.ids.additem.background_color = (1, 1, 0.5, 1)
-        self.stringproperty = 'Enter new item'
+        self.string_property = 'Enter new item'
         self.root.ids.popupbox.open()
 
-    def error(self,price):  # error check
-        try:
-            float(price)
-            return True
-        except ValueError:
-            return False
-
-    def save(self, name, desc, price, instruction, error):
+    def save(self, name, desc, price, instruction):
 
         """Function to save the input item to inventory.csv and dismiss the pop up window after saving"""
+
+        def error(price): # error checking
+            try:
+                float(price)
+                return True
+            except ValueError:
+                return False
 
         if name.strip == '' or desc == '' or price == '':
             instruction.text = "All fields must be completed"
@@ -173,7 +173,7 @@ class MainApp(App):
             instruction.text = "Price cannot be negative"
         else:
             additems = "\n{},{},{},in".format(name, desc, float(price))
-            with open("items.csv", "a") as itemfile:
+            with open("inventory.csv", "a") as itemfile:
                 itemfile.writelines(additems)
             self.item_list.store(additems)
             self.cancel()
@@ -183,6 +183,8 @@ class MainApp(App):
 
         """Function to dismiss pop up window"""
 
-        self.popupbox.dismiss()
-
+        self.root.ids.popupbox.dismiss()
+        self.root.ids.itemname.text = ""
+        self.root.ids.desc.text = ""
+        self.root.ids.priceinput.text = ""
 MainApp().run()

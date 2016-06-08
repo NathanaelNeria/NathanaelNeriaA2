@@ -1,9 +1,9 @@
 BoxLayout:
     id: Box
     Popup:
-        id: popupbox
+        id:popupbox
         size_hint:(.7,.7)
-        title: "Add New Item"
+        title: "Add Item"
         on_parent:
             if self.parent == Box: self.parent.remove_widget(self)
         BoxLayout:
@@ -14,7 +14,7 @@ BoxLayout:
             TextInput:
                 id: itemname
             Label:
-                id: desclabel
+                id: desc_label
                 text: 'Description:'
             TextInput:
                 id: desc
@@ -33,7 +33,7 @@ BoxLayout:
                 on_press:app.cancel()
             Label:
                 id: instruction
-                text: 'Enter details for new item'
+                text: app.string_property
     BoxLayout:
         orientation:'vertical'
         BoxLayout:
@@ -70,7 +70,7 @@ BoxLayout:
                 Button:
                     id:additem
                     text:'Add New Item'
-                    on_press:app.additem
+                    on_press:app.additem()
                     color: (1, 0.4, 0.4, 1)
 
             GridLayout:
