@@ -8,25 +8,24 @@ from kivy.app import App
 from kivy.properties import StringProperty
 from kivy.lang import Builder
 from kivy.uix.button import Button
-from kivy.uix.popup import Popup
 from itemlist import ItemList
 
-class Main(App):
+class MainApp(App):
 
-    status_text = StringProperty()
+    stringproperty = StringProperty()
 
     def __init__(self, **kwargs):
 
         """Initializer to construct the app"""
 
-        super(Main, self).__init__(**kwargs)
+        super(MainApp, self).__init__(**kwargs)
         self.item_list = ItemList()
-        storageitem = open("inventory.csv", "r+")
-        for line in storageitem:
-            self.item_list.store(line)
+        stock = open("inventory.csv", "r+")
+        for items in stock:
+            self.item_list.store(items)
 
     def build(self):
-        self.title = "Assignment2"
+        self.title = "A2"
         self.root = Builder.load_file('layout.kv')
         return self.root
 
@@ -34,116 +33,114 @@ class Main(App):
 
         """Function to show all the list item in the inventory.csv"""
 
-        self.root.ids.itemsBox.clear_widgets()
-        self.root.ids.label.text = 'Choose action from the left menu, then select items on the right'
+        self.root.ids.itemlistbox.clear_widgets()
+        self.root.ids.bottomlabel.text = 'Choose action from the left menu, then select items on the right'
         self.root.ids.listitem.background_color = (1, 1, 0.5, 1)
         self.root.ids.hireitem.background_color = (1, 1, 1, 1)
         self.root.ids.returnitem.background_color = (1, 1, 1, 1)
         self.root.ids.confirm.background_color = (1, 1, 1, 1)
         self.root.ids.additem.background_color = (1, 1, 1, 1)
-        item_count = 0
-        for line in self.item_list:
-            name, item_desc, cost, status = line.split(",")
-            if "in" in status:
-                temp_button = Button(text=name, background_color=(0, 1, 0, 1))
+        for items in self.item_list:
+            name, desc, price, availability = items.split(",")
+            if "in" in availability:
+                tempbutton = Button(text=name, background_color=(0, 1, 0, 1))
             else:
-                temp_button = Button(text=name, background_color=(0.9, 0.3, 0.5, 1))
-            temp_button.bind(on_press=self.pressitem)
-            self.root.ids.itemsBox.add_widget(temp_button)
-            item_count += 1
+                tempbutton = Button(text=name, background_color=(0.9, 0.3, 0.5, 1))
+            tempbutton.bind(on_press=self.pressitem)
+            self.root.ids.itemlistbox.add_widget(tempbutton)
 
 
     def itemhire(self):
 
         """Function to hire the items from inventory.csv, red color item mean the item is out"""
 
-        self.root.ids.itemsBox.clear_widgets()
-        self.root.ids.label.text = 'Choose action from the left menu, then select items on the right'
+        self.root.ids.itemlistbox.clear_widgets()
+        self.root.ids.bottomlabel.text = 'Choose action from the left menu, then select items on the right'
         self.root.ids.listitem.background_color = (1, 1, 1, 1)
         self.root.ids.hireitem.background_color = (1, 1, 0.5, 1)
         self.root.ids.returnitem.background_color = (1, 1, 1, 1)
         self.root.ids.confirm.background_color = (1, 1, 1, 1)
         self.root.ids.additem.background_color = (1, 1, 1, 1)
-        for line in self.item_list:
-            name, item_desc, cost, status = line.split(",")
-            if "in" in status:
-                temp_button = Button(text=name, background_color=(0, 1, 0, 1))
+        for items in self.item_list:
+            name, desc, price, availability = items.split(",")
+            if "in" in availability:
+                tempbutton = Button(text=name, background_color=(0, 1, 0, 1))
             else:
-                temp_button = Button(text=name, background_color=(0.9, 0.3, 0.5, 1))
-            temp_button.bind(on_press=self.pressitem)
-            self.root.ids.itemsBox.add_widget(temp_button)
+                tempbutton = Button(text=name, background_color=(0.9, 0.3, 0.5, 1))
+            tempbutton.bind(on_press=self.pressitem)
+            self.root.ids.itemlistbox.add_widget(tempbutton)
 
     def itemreturn(self):
 
         """Function to return the items that is out from the inventory.csv"""
 
-        self.root.ids.itemsBox.clear_widgets()
-        self.root.ids.label.text = 'Choose action from the left menu, then select items on the right'
+        self.root.ids.itemlistbox.clear_widgets()
+        self.root.ids.bottomlabel.text = 'Choose action from the left menu, then select items on the right'
         self.root.ids.listitem.background_color = (1, 1, 1, 1)
         self.root.ids.hireitem.background_color = (1, 1, 1, 1)
         self.root.ids.returnitem.background_color = (1, 1, 0.5, 1)
         self.root.ids.confirm.background_color = (1, 1, 1, 1)
         self.root.ids.additem.background_color = (1, 1, 1, 1)
-        for line in self.item_list:
-            name, item_desc, cost, status = line.split(",")
-            if "in" in status:
-                temp_button = Button(text=name, background_color=(0, 1, 0, 1))
+        for items in self.item_list:
+            name, desc, price, availability = items.split(",")
+            if "in" in availability:
+                tempbutton = Button(text=name, background_color=(0, 1, 0, 1))
             else:
-                temp_button = Button(text=name, background_color=(0.9, 0.3, 0.5, 1))
-            temp_button.bind(on_press=self.pressitem)
-            self.root.ids.itemsBox.add_widget(temp_button)
+                tempbutton = Button(text=name, background_color=(0.9, 0.3, 0.5, 1))
+            tempbutton.bind(on_press=self.pressitem)
+            self.root.ids.itemlistbox.add_widget(tempbutton)
 
 
     def pressitem(self, instance):
 
-        """Function will show the description of the selected item the label
+        """Function will show the description of the selected item the bottomlabel
         will also change when the item_return or item_hire button is being selected"""
 
-        for line in self.item_list:
-            name, item_desc, cost, status = line.split(",")
+        for items in self.item_list:
+            name, desc, price, availability = items.split(",")
             if instance.text == name:
                 if self.root.ids.listitem.background_color == [1, 1, 0.5, 1]:
-                    self.root.ids.label.text = "{} ({}), ${:,.2f} is {}".format(name, item_desc, float(cost), status)
+                    self.root.ids.bottomlabel.text = "{} ({}), ${:,.2f} is {}".format(name, desc, float(price), availability)
                 elif self.root.ids.hireitem.background_color == [1, 1, 0.5, 1]:
-                    if "in" in status:
-                        self.root.ids.label.text = "Hiring: {} for ${:,.2f}".format(name, float(cost))
+                    if "in" in availability:
+                        self.root.ids.bottomlabel.text = "Hiring: {} for ${:,.2f}".format(name, float(price))
                     else:
-                        self.root.ids.label.text = "Hiring: no items for $0.00"
+                        self.root.ids.bottomlabel.text = "Hiring: no items for $0.00"
                 elif self.root.ids.returnitem.background_color == [1, 1, 0.5, 1]:
-                    if "out" in status:
-                        self.root.ids.label.text = "Returning: {}".format(name)
+                    if "out" in availability:
+                        self.root.ids.bottomlabel.text = "Returning: {}".format(name)
                     else:
-                        self.root.ids.label.text = "Returning: no items"
+                        self.root.ids.bottomlabel.text = "Returning: no items"
 
     def confirm(self):
 
         """Function to make changes on the inventory.csv file"""
 
-        item_count = 0
-        with open("inventory.csv") as file:
-            readitem = file.readlines()
-        for line in readitem:
-            name, item_desc, cost, status = line.split(",")
-            if name in self.root.ids.label.text:
+        itemcount = 0
+        with open("inventory.csv") as itemfile:
+            read = itemfile.readlines()
+        for items in read:
+            name, desc, price, availability = items.split(",")
+            if name in self.root.ids.bottomlabel.text:
                 if self.root.ids.hireitem.background_color == [1, 1, 0.5, 1]:
                     self.item_list.clear()
-                    readitem[item_count] = readitem[item_count].replace("in", "out")
-                    with open("inventory.csv", "w") as file:
-                        file.writelines(readitem)
-                    for line in readitem:
-                        self.item_list.store(line)
-                    file.close()
+                    read[itemcount] = read[itemcount].replace("in", "out")
+                    with open("inventory.csv", "w") as itemfile:
+                        itemfile.writelines(read)
+                    for items in read:
+                        self.item_list.store(items)
+                    itemfile.close()
                     self.itemlist()
                 elif self.root.ids.returnitem.background_color == [1, 1, 0.5, 1]:
                     self.item_list.clear()
-                    readitem[item_count] = readitem[item_count].replace("out","in")
-                    with open("inventory.csv", "w") as file:
-                        file.writelines(readitem)
-                    for line in readitem:
-                        self.item_list.store(line)
-                    file.close()
-            item_count += 1 # add up everytime something is written
-        self.itemlist()
+                    read[itemcount] = read[itemcount].replace("out","in")
+                    with open("inventory.csv", "w") as itemfile:
+                        itemfile.writelines(read)
+                    for items in read:
+                        self.item_list.store(items)
+                    itemfile.close()
+                    self.itemlist()
+            itemcount += 1
 
     def additem(self):
 
@@ -154,56 +151,38 @@ class Main(App):
         self.root.ids.returnitem.background_color = (1, 1, 1, 1)
         self.root.ids.confirm.background_color = (1, 1, 1, 1)
         self.root.ids.additem.background_color = (1, 1, 0.5, 1)
-        additem = Builder.load_file('additempopup.kv')
-        self.popup = Popup(title="Add Item", content=additem, size_hint=(.7, .7))
-        self.popup.open()
+        self.stringproperty = 'Enter new item'
+        self.root.ids.popupbox.open()
 
-    def press_save(self, name, item_desc, cost, instruction):
+    def error(self,price):  # error check
+        try:
+            float(price)
+            return True
+        except ValueError:
+            return False
+
+    def save(self, name, desc, price, instruction, error):
 
         """Function to save the input item to inventory.csv and dismiss the pop up window after saving"""
 
-        error_mode = 0
-        try: # error checking
-            finalPrice = float(cost)
-            if name == "":
-                error_mode = 1
-                error = "Error"
-                check = float(error)
-                print(check)
-            elif item_desc == "":
-                error_mode = 1
-                error = "Error"
-                check = float(error)
-                print(check)
-            elif finalPrice < 0:
-                error_mode = 2
-                error = "Error"
-                check = float(error)
-                print(check)
-            else:
-                newItem = "\n{},{},{},{}".format(name, item_desc, cost, "in")
-                print(newItem)
-                with open("inventory.csv", "a") as file:
-                    file.writelines(newItem)
-                self.item_list.store(newItem)
-                self.cancel()
-                self.status_text = "Choose action from the left menu, then select items on the right"
-                self.itemlist()
-        except ValueError:
-            if error_mode == 0:
-                if name == "" or item_desc == "" or cost == "":
-                    instruction.text = "All fields must be completed"
-                else:
-                    instruction.text = "Please enter a valid number" # will appear if the finalprice is not a number
-            elif error_mode == 1:
-                instruction.text = "All fields must be completed" # will appear if one of the text input is blank
-            elif error_mode == 2:
-                instruction.text = "Price must not be negative" # will appear if the number is negative
+        if name.strip == '' or desc == '' or price == '':
+            instruction.text = "All fields must be completed"
+        elif error(price) == False:
+            instruction.text = "Price must be valid number"
+        elif error(price) == True and float(price) < 0:
+            instruction.text = "Price cannot be negative"
+        else:
+            additems = "\n{},{},{},in".format(name, desc, float(price))
+            with open("items.csv", "a") as itemfile:
+                itemfile.writelines(additems)
+            self.item_list.store(additems)
+            self.cancel()
+            self.itemlist()
 
     def cancel(self):
 
         """Function to dismiss pop up window"""
 
-        self.popup.dismiss()
+        self.popupbox.dismiss()
 
-Main().run()
+MainApp().run()

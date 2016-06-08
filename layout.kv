@@ -1,44 +1,85 @@
 BoxLayout:
-    orientation:'vertical'
-
-    BoxLayout:
-        orientation:'horizontal'
-
+    id: Box
+    Popup:
+        id: popupbox
+        size_hint:(.7,.7)
+        title: "Add New Item"
+        on_parent:
+            if self.parent == Box: self.parent.remove_widget(self)
         BoxLayout:
-            orientation:'vertical'
-            size_hint_x:0.3
-
-            Button:
-                id:listitem
-                text:'List Items'
-                on_press:app.itemlist()
-
-            Button:
-                id:hireitem
-                text:'Hire Items'
-                on_press:app.itemhire()
-
-            Button:
-                id:returnitem
-                text:'Return Items'
-                on_press:app.itemreturn()
-
-            Button:
-                id:confirm
-                text:'Confirm'
-                on_press:app.confirm()
-            Button:
-                id:additem
-                text:'Add New Item'
-                on_press:app.additem()
-
-        GridLayout:
-            id: itemsBox
-            rows: 3
             orientation: 'vertical'
+            Label:
+                id: itemlabel
+                text:'Item Name:'
+            TextInput:
+                id: itemname
+            Label:
+                id: desclabel
+                text: 'Description:'
+            TextInput:
+                id: desc
+            Label:
+                id: price
+                text: 'Price Per Day'
+            TextInput:
+                id: priceinput
+            Button:
+                id: saveitem
+                text: 'Save Item'
+                on_press:app.save(itemname.text, desc.text, priceinput.text, instruction)
+            Button:
+                id: cancelitem
+                text: 'Cancel'
+                on_press:app.cancel()
+            Label:
+                id: instruction
+                text: 'Enter details for new item'
+    BoxLayout:
+        orientation:'vertical'
+        BoxLayout:
+            orientation:'horizontal'
 
-    Label:
-        id:label
-        text:'Choose action from the left menu, then select items on the right'
-        size_hint_y:0.1
-        height: 30
+            BoxLayout:
+                orientation:'vertical'
+                size_hint_x:0.3
+
+                Button:
+                    id:listitem
+                    text:'List Items'
+                    on_press:app.itemlist()
+                    color: (1, 0.4, 0.4, 1)
+
+                Button:
+                    id:hireitem
+                    text:'Hire Items'
+                    on_press:app.itemhire()
+                    color: (1, 0.4, 0.4, 1)
+
+                Button:
+                    id:returnitem
+                    text:'Return Items'
+                    on_press:app.itemreturn()
+                    color: (1, 0.4, 0.4, 1)
+
+                Button:
+                    id:confirm
+                    text:'Confirm'
+                    on_press:app.confirm()
+                    color: (1, 0.4, 0.4, 1)
+
+                Button:
+                    id:additem
+                    text:'Add New Item'
+                    on_press:app.additem
+                    color: (1, 0.4, 0.4, 1)
+
+            GridLayout:
+                id: itemlistbox
+                rows: 3
+                orientation: 'vertical'
+
+        Label:
+            id:bottomlabel
+            text:'Choose action from the left menu, then select items on the right'
+            size_hint_y:0.1
+            height: 30
